@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>透视相机与正交相机</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+
+        透视相机 根据生活中看物品而言的，近大远小
+        正交相机 以平行的光线照射到物体上，投影总是一样大的
+
+        一般说来，对于制图、建模软件通常使用正交投影，这样不会因为投影而改变物体比例；
+        而对于其他大多数应用，通常使用透视投影，因为这更接近人眼的观察效果。
+        当然，照相机的选择并没有对错之分，你可以更具应用的特性，选择一个效果更佳的照相机。
+        https://www.zhihu.com/question/40707212
+
+     -->
+
+    <script src="./js/three@0.125.2.js"></script>
+    <script>
+
+        console.log(THREE);
+        // 创建场景
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xdddddd);
+        // 透视相机
+        //                      PerspectiveCamera  (field of view:视角(角度), aspect ratio:宽高比, near:近裁剪面, far:远裁剪面)
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // 正交相机
+        //                      OrthographicCamera( left, right, top, bottom, near, far )
+        // const camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth / -2, 0.1, 1000);
+
+        // 创建渲染器
+        const renderer = new THREE.WebGLRenderer();
+        // 设置canvas大小
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        // 插入canvas
+        document.body.appendChild(renderer.domElement);
+        console.log(scene, camera, renderer);
+
+        const geometry = new THREE.BoxGeometry(100, 100, 100);
+        const metrial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, metrial);
+        console.log(cube);
+        scene.add(cube);
+        camera.position.z =300;
+
+        function render() {
+            // requestAnimationFrame(render);
+            // requestAnimationFrame 替代 setInterval
+            // 这个新接口具备多个优点, 比如：
+            // 1. 浏览器Tab切换后停止渲染以节约资源
+            // 2. 和屏幕刷新同步避免无效刷新
+            // 3. 在不支持该接口的浏览器中能安全回退为setInterval。
+            // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        render();
+    </script>
+</body>
+
+</html>
