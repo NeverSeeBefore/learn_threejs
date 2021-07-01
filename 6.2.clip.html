@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <script src="./js/three.js"></script>
+    <script>
+        // 创建场景
+        const scene = new THREE.Scene();
+        // 创建渲染器
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        // 创建相机
+        const camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth / -2, 0.1, 1000);
+        camera.position.set(0, 0, 200);
+        camera.lookAt(0, 0, 0);
+
+        function initGeometry(count) {
+            const group = new THREE.Group();
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(i * 10 +1, 32, 32);
+                const material = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                    side: THREE.DoubleSide,
+                    clipIntersection: true,
+                    clippingPlanes: [
+                        new THREE.Plane(new THREE.Vector3(0, 0, -1), 0),
+                        new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0),
+                        new THREE.Plane(new THREE.Vector3(0, -1, 0), 0)
+                    ]
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                group.add(mesh);
+            }
+            return group;
+        }
+
+        const spheres = initGeometry(15);
+        scene.add(spheres);
+        renderer.localClippingEnabled = true;
+        // renderer.render(scene, camera);
+        var deg = 0;
+        function render() {
+            requestAnimationFrame(render);
+            // spheres.rotation.x += 0.02;
+            // spheres.rotation.y += 0.02;
+            deg += 1;
+            camera.lookAt(0, 0, 0);
+            camera.position.set(200 * Math.cos(deg * Math.PI / 180), 0, 200 * Math.sin(deg * Math.PI / 180))
+            renderer.render(scene, camera);
+        }
+        render();
+
+    </script>
+</body>
+
+</html>
